@@ -157,15 +157,15 @@ void main()
   vec3 backgroundColor = fullBackground(uv);
 
   vec3 col = vec3(0);
-  vec3 ro = vec3(0, 0, cos(15.5*u_time)+4.); //cos(15.5*u_time)+5. ray origin that represents camera position
+  vec3 ro = vec3(0, 0, cos(15.5*u_time)+4.);
   vec3 rd = normalize(vec3(uv, -1)); // ray direction
 
-  Surface co = rayMarch(ro, rd, MIN_DIST, MAX_DIST); // closest object
+  Surface co = rayMarch(ro, rd, MIN_DIST, MAX_DIST);
 
   if (co.sd > MAX_DIST) {
-    col = backgroundColor; // ray didn't hit anything
+    col = backgroundColor;
   } else {
-    vec3 p = ro + rd * co.sd; // point on sphere or floor we discovered from ray marching
+    vec3 p = ro + rd * co.sd;
     vec3 normal = calcNormal(p);
     vec3 lightPosition = vec3(2, 1, 7);
     vec3 lightDirection = normalize(lightPosition - p);
