@@ -5,7 +5,7 @@ Some of the raymarching stuff I have made in my own GLSL compiler environment.
 ![Finn](imgs/finn.PNG)
 
 ## Vaporwave
-![Vapor](imgs/vapor.PNG)
+![Vapor](imgs/vaporwave.PNG)
 
 ## Gyroscope
 ![Gyro](imgs/gyro.PNG)
