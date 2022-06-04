@@ -1,4 +1,4 @@
-///<music id="mZvQ9ipTK_8" loop="true"/>
+///<music id="mZvQ9ipTK_8" loop="true">
 uniform vec2 u_resolution;
 uniform float u_time;
 const int MAX_MARCHING_STEPS = 255;
@@ -22,7 +22,7 @@ struct Surface {
 //For instanced raymarching
 Surface sdSphere(vec3 p, float r, vec3 offset, vec3 col)
 {
-  float d = length(mod(p,offset)-0.5*offset) - r; //modulo SDF instancing + adding '-0.5*c' for instancing
+  float d = length(mod(p,offset)-0.5*offset) - r; //adding '-0.5*c' for instancing
   return Surface(d, col);
 }
 //For regular object raymarching
@@ -40,6 +40,8 @@ Surface sdFloor(vec3 p, vec3 col) {
 Surface sdCappedCylinder(vec3 p, float h, float r, vec3 col){
   vec2 d = abs(vec2(length(p.xz),p.y)) - vec2(h,r);
   float d1 = min(max(d.x,d.y),0.0) + length(max(d,0.0));
+  //bumps
+  d1 -= 0.1*(.0025+.35*sin(7.*atan(p.x,p.z)));
   return Surface(d1, col);
 }
 
@@ -79,7 +81,8 @@ float pat(vec2 uv,float p,float q,float s,float glow)
 //Water
 vec3 water(vec2 uv) {
 	float time = u_time * .5+23.0;
-  vec2 p = mod(uv*TAU, TAU)-250.0;
+	//vec2 p = mod(uv*TAU*2.0, TAU)-250.0;
+    vec2 p = mod(uv*TAU, TAU)-250.0;
 	vec2 i = vec2(p);
 	float c = 1.0;
 	float inten = .005;
@@ -95,6 +98,7 @@ vec3 water(vec2 uv) {
     colour.b += 0.2;
     return colour;
 }
+//End of water
 //Sky
 vec2 rand2(vec2 p)
 {
@@ -233,7 +237,7 @@ Surface rayMarch(vec3 ro, vec3 rd, float start, float end) {
   
   return co;
 }
-//Important for lighting calculations
+
 vec3 calcNormal(in vec3 p) {
     vec2 e = vec2(1.0, -1.0) * 0.0005; // epsilon
     return normalize(
@@ -262,11 +266,16 @@ void main()
     vec3 lightPosition = vec3(ro.xy,ro.z-4.);
     vec3 lightDirection = normalize(lightPosition - p);
 
+    // Calculate diffuse reflection by taking the dot product of 
+    // the normal and the light direction.
     float dif = clamp(dot(normal, lightDirection), 0.3, 1.);
-    
+
+    // Multiply the diffuse reflection value by an orange color and add a bit
+    // of the background color to the sphere to blend it more with the background.
     col = dif * co.col + vec3(0.05,0.2,0.84) * .2;
     col.r += 0.2;
   	col.b += 0.21;
   }
+  // Output to screen
   gl_FragColor = vec4(col, 1.0);
 }
