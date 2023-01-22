@@ -1,5 +1,5 @@
 # Raymarching Stuff
-Some of the raymarching stuff I have made in my own GLSL compiler environment.
+Some of the raymarching stuff I have made in my own GLSL compiler (ShadeD) environment.
 
 ### List of GLSL uniforms:
   - `u_time` -- float - returns time
